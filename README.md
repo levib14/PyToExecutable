@@ -1,4 +1,4 @@
-# 🐍 PyToExecutable
+# PyToExecutable
 
 **Convert any Python script into a standalone executable (.exe or .app) with full GUI support!**
 
@@ -9,27 +9,27 @@ Turn your Python code into distributable applications that run on Windows and ma
 
 ---
 
-## ✨ Features
+## Features
 
-- 🚀 **One-Click Conversion** - Paste your code, get an executable
-- 🎨 **Full GUI Support** - tkinter, PyQt5/6, PySide2/6, wxPython, pygame, and more
-- 🖼️ **Image & Resource Bundling** - Include images, data files, and assets
-- 🔍 **Auto-Dependency Detection** - Automatically finds and installs required packages
-- 📦 **Single File Output** - Everything bundled into one portable executable
-- 🎯 **Smart Console Detection** - Automatically detects if your app needs a console window
-- 🌐 **Cross-Platform** - Works on Windows and macOS
-- 💾 **No Python Required** - Generated executables run standalone
+-  **One-Click Conversion** - Paste your code, get an executable
+-  **Full GUI Support** - tkinter, PyQt5/6, PySide2/6, wxPython, pygame, and more
+-  **Image & Resource Bundling** - Include images, data files, and assets
+-  **Auto-Dependency Detection** - Automatically finds and installs required packages
+-  **Single File Output** - Everything bundled into one portable executable
+-  **Smart Console Detection** - Automatically detects if your app needs a console window
+-  **Cross-Platform** - Works on Windows and macOS
+-  **No Python Required** - Generated executables run standalone
 
 ---
 
-## 📋 Requirements
+##  Requirements
 
 - Python 3.7 or higher
 - PyInstaller (auto-installed if not present)
 
 ---
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Installation
 
@@ -54,11 +54,11 @@ Follow the prompts:
 4. Configure options (or use defaults)
 5. Wait for the build to complete
 
-**Your executable is ready!** 🎉
+**Your executable is ready!** 
 
 ---
 
-## 📖 Examples
+## Examples
 
 ### Example 1: Simple GUI Calculator
 
@@ -162,7 +162,7 @@ END
 
 ---
 
-## 🎯 Supported GUI Frameworks
+## Supported GUI Frameworks
 
 | Framework | Status | Auto-Install |
 |-----------|--------|--------------|
@@ -178,7 +178,7 @@ END
 
 ---
 
-## 🔧 Advanced Usage
+## Advanced Usage
 
 ### Programmatic API
 
@@ -247,7 +247,7 @@ Icon file path: assets/myapp.ico
 
 ---
 
-## 🛠️ Configuration Options
+## Configuration Options
 
 | Option | Description | Default |
 |--------|-------------|---------|
@@ -262,7 +262,7 @@ Icon file path: assets/myapp.ico
 
 ---
 
-## 📦 Distribution
+## Distribution
 
 Your generated executable is **completely standalone**:
 
@@ -275,7 +275,7 @@ Simply share the `.exe` (Windows) or `.app` (macOS) file!
 
 ---
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### "Module not found" errors
 
@@ -306,7 +306,7 @@ mv email.py my_email_script.py
 
 ---
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - Built with [PyInstaller](https://www.pyinstaller.org/)
 - Supports all major Python GUI frameworks
