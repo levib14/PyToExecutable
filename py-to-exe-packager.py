@@ -2,6 +2,9 @@
 Python Code to Executable Packager
 Converts Python code into standalone Windows (.exe) or macOS (.app) applications
 with full support for GUI frameworks, images, and all Python modules
+py-to-exe-packager.py
+created by Levi Brant, Thebrantbrothers@gmail.com
+12/30/2025
 """
 
 import os
