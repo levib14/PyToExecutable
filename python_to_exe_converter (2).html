@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python to Executable Converter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .upload-area {
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+            transition: all 0.3s;
+            cursor: pointer;
+            background: #f8f9ff;
+        }
+
+        .upload-area:hover {
+            background: #f0f2ff;
+            border-color: #764ba2;
+        }
+
+        .upload-area.dragover {
+            background: #e8ebff;
+            border-color: #764ba2;
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .file-info {
+            background: #f0f2ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .file-info.show {
+            display: block;
+        }
+
+        .options {
+            margin-bottom: 30px;
+        }
+
+        .option-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        select, input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        select:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .progress {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .progress.show {
+            display: block;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #f0f0f0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .status {
+            color: #666;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .output-box {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+            font-family: 'Courier New', monospace;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .output-box.show {
+            display: block;
+        }
+
+        .output-box h3 {
+            color: #4ec9b0;
+            margin-bottom: 15px;
+        }
+
+        .dependencies {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        .dependencies h4 {
+            color: #2e7d32;
+            margin-bottom: 10px;
+        }
+
+        .dep-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .dep-tag {
+            background: #4caf50;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 14px;
+        }
+
+        .download-section {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .download-section.show {
+            display: block;
+        }
+
+        .download-btn {
+            background: #4caf50;
+            margin-top: 10px;
+        }
+
+        .download-btn:hover:not(:disabled) {
+            background: #45a049;
+        }
+
+        code {
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .ready {
+            text-align: center;
+            padding: 20px;
+            color: #4caf50;
+            font-weight: 600;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐍 Python to Executable Builder</h1>
+        <p class="subtitle">Analyze your Python script and generate executable build packages</p>
+
+        <div class="ready">✅ Ready to analyze your Python files!</div>
+
+        <div id="mainContent">
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">📁</div>
+                <h3>Click to upload or drag and drop</h3>
+                <p>Your Python (.py) file here</p>
+                <input type="file" id="fileInput" accept=".py">
+            </div>
+
+            <div class="file-info" id="fileInfo">
+                <strong>Selected file:</strong> <span id="fileName"></span><br>
+                <strong>Size:</strong> <span id="fileSize"></span>
+            </div>
+
+            <div class="options">
+                <div class="option-group">
+                    <label for="platform">Target Platform:</label>
+                    <select id="platform">
+                        <option value="windows">Windows (.exe)</option>
+                        <option value="mac">macOS (.app)</option>
+                        <option value="both">Both Platforms</option>
+                    </select>
+                </div>
+
+                <div class="option-group">
+                    <label for="appName">Application Name:</label>
+                    <input type="text" id="appName" placeholder="my_app" value="my_app">
+                </div>
+
+                <div class="option-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="oneFile" checked>
+                        <label for="oneFile">Bundle into one file</label>
+                    </div>
+                </div>
+
+                <div class="option-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="noConsole">
+                        <label for="noConsole">Hide console (GUI apps only)</label>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn" id="analyzeBtn" disabled>Analyze & Generate Build Package</button>
+
+            <div class="progress" id="progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill">0%</div>
+                </div>
+                <p class="status" id="status">Processing...</p>
+            </div>
+
+            <div class="output-box" id="outputBox">
+                <h3>📋 Analysis Results</h3>
+                <div id="outputContent"></div>
+            </div>
+
+            <div class="download-section" id="downloadSection">
+                <button class="btn download-btn" id="downloadBtn">📦 Download Build Package (.zip)</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script>
+        let selectedFile = null;
+        let fileContent = '';
+        let analyzedData = null;
+
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const fileInfo = document.getElementById('fileInfo');
+        const fileName = document.getElementById('fileName');
+        const fileSize = document.getElementById('fileSize');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const progress = document.getElementById('progress');
+        const progressFill = document.getElementById('progressFill');
+        const status = document.getElementById('status');
+        const outputBox = document.getElementById('outputBox');
+        const outputContent = document.getElementById('outputContent');
+        const downloadSection = document.getElementById('downloadSection');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const appName = document.getElementById('appName');
+
+        uploadArea.addEventListener('click', () => fileInput.click());
+
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0 && files[0].name.endsWith('.py')) {
+                handleFile(files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFile(e.target.files[0]);
+            }
+        });
+
+        async function handleFile(file) {
+            selectedFile = file;
+            fileName.textContent = file.name;
+            fileSize.textContent = (file.size / 1024).toFixed(2) + ' KB';
+            fileInfo.classList.add('show');
+            analyzeBtn.disabled = false;
+            
+            const baseName = file.name.replace('.py', '');
+            appName.value = baseName;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                fileContent = e.target.result;
+            };
+            reader.readAsText(file);
+        }
+
+        analyzeBtn.addEventListener('click', analyzeAndGenerate);
+
+        async function analyzeAndGenerate() {
+            if (!selectedFile) return;
+
+            analyzeBtn.disabled = true;
+            progress.classList.add('show');
+            outputBox.classList.remove('show');
+            downloadSection.classList.remove('show');
+
+            try {
+                updateProgress(10, 'Analyzing Python script...');
+                await sleep(300);
+
+                updateProgress(30, 'Detecting imports and dependencies...');
+                await sleep(300);
+
+                // Analyze imports using regex (more reliable than WASM)
+                const imports = analyzeImports(fileContent);
+                
+                updateProgress(50, 'Generating build configuration...');
+                await sleep(300);
+
+                const platform = document.getElementById('platform').value;
+                const name = appName.value || 'my_app';
+                const oneFile = document.getElementById('oneFile').checked;
+                const noConsole = document.getElementById('noConsole').checked;
+
+                updateProgress(70, 'Creating build scripts...');
+                await sleep(300);
+
+                analyzedData = generateBuildPackage(imports, name, platform, oneFile, noConsole);
+
+                updateProgress(100, 'Complete! Build package ready.');
+
+                displayResults(imports, analyzedData);
+                outputBox.classList.add('show');
+                downloadSection.classList.add('show');
+
+            } catch (error) {
+                status.innerHTML = `<span style="color: red;">Error: ${error.message}</span>`;
+            } finally {
+                analyzeBtn.disabled = false;
+            }
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        function analyzeImports(code) {
+            const imports = new Set();
+            const lines = code.split('\n');
+            
+            for (const line of lines) {
+                const trimmed = line.trim();
+                
+                // Match: import module
+                const importMatch = trimmed.match(/^import\s+([\w.]+)/);
+                if (importMatch) {
+                    const module = importMatch[1].split('.')[0];
+                    imports.add(module);
+                    continue;
+                }
+                
+                // Match: from module import ...
+                const fromMatch = trimmed.match(/^from\s+([\w.]+)\s+import/);
+                if (fromMatch) {
+                    const module = fromMatch[1].split('.')[0];
+                    imports.add(module);
+                }
+            }
+            
+            return Array.from(imports);
+        }
+
+        function updateProgress(percent, message) {
+            progressFill.style.width = percent + '%';
+            progressFill.textContent = Math.round(percent) + '%';
+            status.textContent = message;
+        }
+
+        function generateBuildPackage(imports, name, platform, oneFile, noConsole) {
+            const standardLibs = ['os', 'sys', 're', 'json', 'math', 'datetime', 'time', 'random', 'collections', 'itertools', 'functools', 'pathlib', 'io', 'logging', 'argparse', 'subprocess', 'threading', 'multiprocessing', 'socket', 'urllib', 'http', 'email', 'xml', 'csv', 'sqlite3', 'pickle', 'hashlib', 'base64', 'uuid', 'copy', 'pprint', 'traceback', 'warnings', 'abc', 'typing', 'enum', 'dataclasses', 'string', 'textwrap', 'struct', 'codecs', 'ast', 'inspect', 'dis', 'gc', 'weakref', 'ctypes', 'array', 'queue', 'heapq', 'bisect', 'statistics', 'decimal', 'fractions', 'tempfile', 'shutil', 'glob', 'fnmatch', 'zipfile', 'tarfile', 'gzip', 'bz2', 'lzma', 'zlib'];
+            
+            const thirdPartyImports = imports.filter(imp => !standardLibs.includes(imp) && imp !== '__main__');
+
+            let windowsScript = `@echo off
+echo ========================================
+echo Python to EXE Build Script for Windows
+echo ========================================
+echo.
+
+REM Check if Python is installed
+python --version >nul 2>&1
+if errorlevel 1 (
+    echo ERROR: Python is not installed or not in PATH
+    echo Please install Python from https://www.python.org/
+    pause
+    exit /b 1
+)
+
+echo Installing PyInstaller...
+pip install pyinstaller
+if errorlevel 1 (
+    echo ERROR: Failed to install PyInstaller
+    pause
+    exit /b 1
+)
+`;
+
+            if (thirdPartyImports.length > 0) {
+                windowsScript += `\necho.\necho Installing required dependencies...\n`;
+                thirdPartyImports.forEach(imp => {
+                    windowsScript += `echo Installing ${imp}...\npip install ${imp}\n`;
+                });
+            }
+
+            windowsScript += `\necho.\necho Building executable...\npyinstaller `;
+            if (oneFile) windowsScript += `--onefile `;
+            if (noConsole) windowsScript += `--noconsole `;
+            windowsScript += `--name=${name} ${selectedFile.name}\n\n`;
+            windowsScript += `if errorlevel 1 (
+    echo ERROR: Build failed
+    pause
+    exit /b 1
+)
+
+echo.
+echo ========================================
+echo Build completed successfully!
+echo Your executable is in the dist folder
+echo ========================================
+pause
+`;
+
+            let macScript = `#!/bin/bash
+echo "========================================"
+echo "Python to APP Build Script for macOS"
+echo "========================================"
+echo ""
+
+# Check if Python is installed
+if ! command -v python3 &> /dev/null; then
+    echo "ERROR: Python is not installed"
+    echo "Please install Python from https://www.python.org/"
+    exit 1
+fi
+
+echo "Installing PyInstaller..."
+pip3 install pyinstaller
+if [ $? -ne 0 ]; then
+    echo "ERROR: Failed to install PyInstaller"
+    exit 1
+fi
+`;
+
+            if (thirdPartyImports.length > 0) {
+                macScript += `\necho ""\necho "Installing required dependencies..."\n`;
+                thirdPartyImports.forEach(imp => {
+                    macScript += `echo "Installing ${imp}..."\npip3 install ${imp}\n`;
+                });
+            }
+
+            macScript += `\necho ""\necho "Building application..."\npyinstaller `;
+            if (oneFile) macScript += `--onefile `;
+            if (noConsole) macScript += `--noconsole `;
+            macScript += `--name=${name} ${selectedFile.name}\n\n`;
+            macScript += `if [ $? -ne 0 ]; then
+    echo "ERROR: Build failed"
+    exit 1
+fi
+
+echo ""
+echo "========================================"
+echo "Build completed successfully!"
+echo "Your application is in the dist folder"
+echo ""
+echo "Full path: $(pwd)/dist/${name}"
+echo ""
+echo "Opening dist folder..."
+open dist
+echo "========================================"
+`;
+
+            const readme = `# ${name} - Build Instructions
+
+This package contains everything you need to build your Python application into a standalone executable.
+
+## Contents
+- ${selectedFile.name} - Your Python script
+- build_windows.bat - Windows build script
+- build_mac.sh - macOS build script
+- README.md - This file
+
+## Requirements
+${thirdPartyImports.length > 0 ? `
+### Third-Party Dependencies
+This application requires the following Python packages:
+${thirdPartyImports.map(imp => `- ${imp}`).join('\n')}
+
+The build scripts will automatically install these for you.
+` : 'No third-party dependencies required (uses only Python standard library).'}
+
+## Building on Windows
+1. Double-click build_windows.bat
+2. Wait for the build to complete
+3. Find your executable in the dist folder
+
+## Building on macOS
+1. Open Terminal in this folder
+2. Run: chmod +x build_mac.sh
+3. Run: ./build_mac.sh
+4. The dist folder will open automatically when done
+5. Your application will be at: ./dist/${name}
+
+**Finding the dist folder manually:**
+- It's in the same folder as your Python script
+- In Terminal, run: ls -la to see all folders
+- Run: open dist to open it in Finder
+
+## Manual Build (Advanced)
+If you prefer to build manually:
+
+\`\`\`bash
+# Install PyInstaller
+pip install pyinstaller
+
+${thirdPartyImports.length > 0 ? `# Install dependencies
+${thirdPartyImports.map(imp => `pip install ${imp}`).join('\n')}
+` : ''}
+# Build
+pyinstaller ${oneFile ? '--onefile ' : ''}${noConsole ? '--noconsole ' : ''}--name=${name} ${selectedFile.name}
+\`\`\`
+
+## Troubleshooting
+- Make sure Python is installed and in your PATH
+- Some antivirus software may flag PyInstaller executables as false positives
+- Large dependencies may take several minutes to bundle
+- If a dependency fails to install, try installing it manually first
+
+## Notes
+- Windows executables (.exe) must be built on Windows
+- macOS applications (.app) must be built on macOS
+- The executable will include all dependencies and can run without Python installed
+- The first build may take longer as PyInstaller analyzes dependencies
+
+## Location of Built Files
+**The dist folder is created in the same directory as your Python script.**
+
+On macOS:
+- In Terminal: \`ls\` will show the dist folder
+- Run \`open dist\` to open it in Finder
+- Or navigate to it in Finder manually
+
+On Windows:
+- The dist folder appears in the same folder as your .py file
+- Double-click to open it in File Explorer
+`;
+
+            return {
+                windowsScript,
+                macScript,
+                readme,
+                thirdPartyImports
+            };
+        }
+
+        function displayResults(imports, buildPackage) {
+            let html = '<div class="dependencies"><h4>📦 Detected Dependencies</h4>';
+            
+            if (buildPackage.thirdPartyImports.length > 0) {
+                html += '<p><strong>Third-party packages:</strong></p><div class="dep-list">';
+                buildPackage.thirdPartyImports.forEach(imp => {
+                    html += `<span class="dep-tag">${imp}</span>`;
+                });
+                html += '</div>';
+            } else {
+                html += '<p>✅ No third-party dependencies detected (uses only standard library)</p>';
+            }
+            
+            html += '</div>';
+
+            const platform = document.getElementById('platform').value;
+            const platformText = platform === 'both' ? 'Windows and macOS' : platform === 'windows' ? 'Windows' : 'macOS';
+            
+            html += `<p><strong>Target Platform:</strong> ${platformText}</p>`;
+            html += `<p><strong>Configuration:</strong> ${document.getElementById('oneFile').checked ? 'Single file bundle' : 'Directory bundle'}${document.getElementById('noConsole').checked ? ', No console window' : ''}</p>`;
+            html += `<p style="margin-top: 15px;">✅ Build package generated successfully!</p>`;
+            html += `<p>Click the download button below to get your complete build package with scripts and instructions.</p>`;
+
+            outputContent.innerHTML = html;
+        }
+
+        downloadBtn.addEventListener('click', async () => {
+            if (!analyzedData) return;
+
+            downloadBtn.disabled = true;
+            downloadBtn.textContent = 'Creating ZIP...';
+
+            try {
+                const zip = new JSZip();
+                
+                zip.file(selectedFile.name, fileContent);
+                zip.file('build_windows.bat', analyzedData.windowsScript);
+                zip.file('build_mac.sh', analyzedData.macScript);
+                zip.file('README.md', analyzedData.readme);
+
+                const content = await zip.generateAsync({type: 'blob'});
+                
+                const a = document.createElement('a');
+                const url = URL.createObjectURL(content);
+                a.href = url;
+                a.download = `${appName.value || 'my_app'}_build_package.zip`;
+                document.body.appendChild(a);
+                a.click();
+                
+                setTimeout(() => {
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                }, 100);
+
+                downloadBtn.textContent = '✅ Downloaded!';
+                setTimeout(() => {
+                    downloadBtn.textContent = '📦 Download Build Package (.zip)';
+                    downloadBtn.disabled = false;
+                }, 2000);
+
+            } catch (error) {
+                alert('Error creating ZIP: ' + error.message);
+                downloadBtn.textContent = '📦 Download Build Package (.zip)';
+                downloadBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
